@@ -1,38 +1,54 @@
 \section*{Regression}
-\subsection*{Linear Regression $f(x)=w^Tx$}
-Error: $\hat{R}(w) = \sum_{i=1}^n (y_i - w^Tx_i)^2 = ||Xw-y||^2_2$\\
-$w^* = \operatorname{argmin_w} \sum_{i=1}^n (y_i - w^Tx_i)^2$\\
-Closed form: $w^*=(X^T X)^{-1} X^T y$, $X\in\mathbb{R}^{n \times d}$\\
-$\nabla_w \hat{R}(w) = -2 \sum_{i=1}^n (y_i-w^T x_i) \cdot x_i = 2X^T (Xw-y)$
+\subsection*{Linear Regression $f(x)=w^Tx; X \in \mathbb{R}^{n \times d}$}
+$L(w) = ||Xw-y||^2_2; X^TX \hat{w} = X^T y$\\
+% $\hat{w} = \operatorname{argmin_w} \sum_{i=1}^n (y_i - w^Tx_i)^2$\\
+\(d \leq n: \hat{w} = (X^TX)^{-1}X^Ty\) if \(rk(X) = d\)\\
+\(n < d: \hat{w} = (X^TX)^\dag X^T y\); \(rk(X) = n\) \(||\hat{w}||_2\) min.
 
-
+$\nabla_w L(w)  = 2X^T (Xw-y)$
+% = -2 \sum_{i=1}^n (y_i-w^T x_i) \cdot x_i
 \subsection*{Gradient Descent}
 1. Start arbitrary $w_o \in \mathbb{R}$\\
-2. For $i$ do $w_{t+1} = w_t - \eta_t \nabla \hat{R}(w_t)$
+2. Do $w_{t+1} = w_t - \eta \nabla L(w_t)$ until \(||w^t - w^{t-1}||_2 \leq \epsilon\)
 
-\subsection*{Expected Error (True Risk)}
-Assumption: data set generated iid: $R(w) =$\\ 
-$\int P(x,y) (y-w^Tx)^2 \partial x \partial y = \mathbb{E}_{x,y}[(y-w^Tx)^2]$\\
-$\hat{R}_D(w) = \frac{1}{|D|}\sum_{(x,y)\in D (y-w^Tx)^2}$ (estimating error)
+GD conv. to \(\hat{w}\) if \(rk(X^TX) = d, \eta < \frac{2}{\lambda_{max}(X^TX)}\)
+\(||w^{t+1} - \hat{w}||\leq ||I - \eta X^TX||_{op}||w^t-\hat{w}||_2 \leq 
+\rho^{t+1}||w^0-\hat{w}||_2; \eta_{opt} = \frac{2}{\lambda_{max}+\lambda_{min}}; 
+\rho_{min} = 1-\eta_{opt}\lambda_{min} = \frac{\kappa-1}{\kappa+1}\)
+\textbf{minibatch SGD:} \(\nabla L_S(w)\) on random \(S \subset D\) every iter.; \(|S| = 1\) SGD; 
+\(E_S(\nabla L_S(w)) = \nabla L(w)\)
 
-\subsection*{Gaussian/Normal Distribution}
-$\sigma =$ standard deviation, $\sigma^2 =$ var., $\mu =$ mean:\\
-$f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} exp(-\frac{(x-\mu)^2}{2\sigma^2})$\\
-$f(x_1,.,x_k)=\frac{1}{\sqrt{(2\pi)^k|\Sigma|}}
-exp(-\frac{1}{2}(\boldsymbol{x-\mu})^T\Sigma^{-1}(\boldsymbol{x-\mu}))$
+\textbf{strictly c.} \(\implies\) stationary point is unique g. min.;
+\textbf{strongly c.} \(\implies\) unique g. min. exists 
+\subsection*{Errors}
+exp. estim. err.: \(E_X(\ell(f(X), f^*(X)))\); \(y = f^*(x)+\varepsilon\)\\
+generaliz. err.: \(L(f; \mathbb{P}_{X,Y}) = E_{X,Y}(\ell(f(X), Y))\)
+\(L(\hat{f}; \mathbb{P}_{X,Y}) = E_X((\hat{f}(X) - f^*(X))^2) + \sigma^2\)(sq. loss)
+\(L(\hat{f}_\D; \D_{\text{test}}) = 
+\frac{1}{|\D_{\text{test}}|}\sum_{(x,y) \in \D_{\text{test}}}
+\ell(\hat{f}_\D(x),y)\) estim. generaliz. err.; g. err. + const = exp. estim err.
+\textbf{k-fold CV:} \(\uparrow\)k \(\implies\) \(\hat{f}_{M_i, \D'} \approx \hat{f}_{M_i, \mathcal{D_{\text{use}}}}\), 
+\(CV_k(M_i) \not \approx L(\hat{f}_{M_i, \D_\text{use}};\mathbb{P}_{X, Y})\); extreme: LOOCV
+\subsection*{Bias-Variance Tradeoff}
+\(\text{Bias}_{\D}^2(\hat{f}_\D, x) := (E_\D(\hat{f}_\D(x))-f^*(x))^2\)\\
+\(\text{Bias}^2_{\D}(\hat{f}_\D) := E_X(\text{Bias}_{\D}^2(\hat{f}_\D, X));
+\text{Var}_\D(\hat{f}_\D) := E_X(\text{Var}_\D(\hat{f}_\D(X))); 
+E_\D(L(\hat{f}_\D; \mathbb{P}_{X,Y})) = \text{Var}_\D(\hat{f}_\D)+\text{Bias}_\D^2(\hat{f}_\D)+\sigma^2\)
+% \subsection*{Gaussian/Normal Distribution}
+% $\sigma =$ standard deviation, $\sigma^2 =$ var., $\mu =$ mean:\\
+% $f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} exp(-\frac{(x-\mu)^2}{2\sigma^2})$\\
+% $f(x_1,.,x_k)=\frac{1}{\sqrt{(2\pi)^k|\Sigma|}}
+% exp(-\frac{1}{2}(\boldsymbol{x-\mu})^T\Sigma^{-1}(\boldsymbol{x-\mu}))$
 
-\subsection*{Ridge regression}
-Regularization: $\underset{w}{\operatorname{min}} \sum \limits_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_2^2$\\
-Closed form solution: $w^*=(X^T X + \lambda I)^{-1} X^T y$
-Gradient: $\nabla_w \hat{R}(w) = -2 \sum \limits_{i=1}^n (y_i-w^T x_i) \cdot x_i + 2 \lambda w$
+\textbf{Ridge} closed form: $\hat{w}=(X^T X + \lambda I)^{-1} X^T y$
 
 %\subsection*{L1-regularized regression (the Lasso)}
 %Regularization: $\underset{w}{\operatorname{min}} \sum \limits_{i=1}^n (y_i - w^Tx_i)^2 + \lambda ||w||_1$\\
 %Encourages coefficients to be exactly 0.
 
-\subsection*{Standardization}
-Goal: each feature: $\mu = 0$, unit $\sigma^2$: $\tilde{x}_{i,j} = \frac{(x_{i,j}-\hat{\mu}_j)}{\hat{\sigma}_j}$\\
-$\hat{\mu}_j = \frac{1}{n}\sum_{i=1}^n x_{i,j}$, $\hat{\sigma}_j^2 = \frac{1}{n}\sum_{i=1}^n {(x_{i,j}-\hat{\mu}_j)}^2$ 
+% \subsection*{Standardization}
+% Goal: each feature: $\mu = 0$, unit $\sigma^2$: $\tilde{x}_{i,j} = \frac{(x_{i,j}-\hat{\mu}_j)}{\hat{\sigma}_j}$\\
+% $\hat{\mu}_j = \frac{1}{n}\sum_{i=1}^n x_{i,j}$, $\hat{\sigma}_j^2 = \frac{1}{n}\sum_{i=1}^n {(x_{i,j}-\hat{\mu}_j)}^2$ 
 
 
 
@@ -44,4 +60,4 @@ $\hat{\mu}_j = \frac{1}{n}\sum_{i=1}^n x_{i,j}$, $\hat{\sigma}_j^2 = \frac{1}{n}
 
 %my idea
 %\subsection*{Regularization}
-%A lot of supervised learning problems can be written in this way: $\lambda$: $\min \limits_w \hat{R}(w) + \lambda C(w)$\\
+%A lot of supervised learning problems can be written in this way: $\lambda$: $\min \limits_w L(w) + \lambda C(w)$\\
