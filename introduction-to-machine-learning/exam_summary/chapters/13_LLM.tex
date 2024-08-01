@@ -1,0 +1,18 @@
+\section*{Large Language Models}
+\textbf{Sequence-to-sequence:} Use RNN with hidden state, keep hidden state, encoder: 
+current input + last hidden state $\rightarrow$ new hidden state, decoder: 
+current hidden state $\rightarrow$ output token + new hidden state
+
+\subsection*{Transformers}
+Use encoder/decoder architecture, don't need recurrence because of (self-) attention (multi-head), 
+encoder: self-attention + feed-forward (FCNN), decoder: self-attention, encoder-decoder attention, 
+feed-forward
+
+\textbf{Self-attention:} For the tokens $X$, generate 
+\textbf{query} $Q = X \times W_Q$, \textbf{key} $K = X \times W_K$, \textbf{value} $V = X \times W_V$. 
+For each token, perform dot product of query and key, use soft-maxed version to scale value, 
+i.e. $Z = \text{softmax}(\frac{Q \times K\top}{\sqrt{d_k}}) V$
+
+\textbf{Positional Encodings:} Add to word embeddings, e.g. sine functions w/ different freq.
+
+\textbf{Enc.-Dec. Att.:} dec.: $Q$ so far. enc.: $K, V$

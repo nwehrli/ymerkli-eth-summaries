@@ -1,0 +1,97 @@
+\section*{Probability Modeling}
+Assumption: Data set is generated iid\\
+Find $h:X\rightarrow Y$ that minimizes pred. error 
+
+$\hat{y} =h^*(x) = \mathbb{E}[Y|X=x]$ for sq. loss
+
+\subsection*{Maximum Likelihood Estimation (MLE)}
+Choose a particular parametric $\hat{p}(Y|X,\theta)$
+
+\(\theta^* = \underset{\theta}{\operatorname{amax}} \hat{p}(y_{1:n}|x_{1:n},\theta)\\\iid 
+    \operatorname{amin_\theta} - \sum_{i=1}^n log \hat{p}(y_i|x_i,\theta)\)
+
+\subsection*{Ex. Conditional Linear Gaussian}
+
+Assume Gaussian noise $y = f(x) + \epsilon$ with $\epsilon \sim \mathcal{N}(0, \sigma^2)$ and $f(x) = w^\top x$:
+
+\qquad \qquad $\hat p(y \; | \; x, \theta) = \mathcal{N}(y; w^\top x, \sigma^2)$
+
+The optimal $\hat w$ can be found using MLE:
+
+$\hat w = \argmax{w} \; p(y | x, \theta) =\argmin{w} \sum (y_i - w^\top x_i)^2$
+\subsection*{Maximum a Posteriori Estimate}
+
+Assume $y = f(x; \theta^*) + \epsilon$, $\epsilon \sim \mathcal{N}(0, \sigma^2)$, but $\theta^* \sim \mathcal{N}(0, \sigma_\theta^2 I_d)$ The posterior distribution of $\theta$ is given by:
+$p(\theta \; | \; \mathcal{D}) = \frac{p( \mathcal{D} \; | \; \theta)}{p( \mathcal{D})} \cdot p(\theta)$
+
+Now we want to find the MAP for $\theta$:
+
+$\hat \theta = \text{argmax}_\theta \; p(\theta \; | \; \mathcal{D})$
+
+\quad $= \text{argmax}_\theta \; p(\mathcal{D} \; | \; \theta) \cdot p(\theta)$
+
+\quad $= \text{argmin}_\theta - \sum_{i=1}^n \log p(y_i \; | \; x_i, \theta) - \log p(\theta)$
+
+\quad $= \text{argmin}_\theta \; \frac{\sigma^2}{\sigma_\theta^2} ||\theta||_2^2 + \sum_{i=1}^n(y_i - f(x_i; \theta))^2$
+
+Regularization can be understood as MAP inference, with different priors (= regularizers) and likelihoods (= loss functions).
+
+
+\subsection*{Statistical Models for Classification}
+
+$f$ minimizing the population risk: $f^*(x) = \text{argmax}_{\hat y} \; p(\hat y \; | \; x)$
+
+This is called the Bayes' optimal predictor for the 0-1 loss. Assuming iid. Bernoulli noise, the conditional probability is:
+
+\qquad \qquad$p(y \; | \; x,w) \sim \text{Ber}(y; \sigma(w^\top x))$
+
+Where $\sigma(z) = \frac{1}{1 + \exp(-z)}$ is the sigmoid function. Using MLE we get:
+
+\quad \;$\hat w = \argmin{w} \sum_{i = 1}^n \log (1 + \exp(-y_i w^\top x_i))$
+
+Which is the logistic loss. Instead of MLE we can estimate MAP, e.g. with a Gaussian prior:
+
+$\; \;\hat w = \argmin{w} \; \lambda ||w||_2^2 + \sum_{i = 1}^n \log (1 + e^{-y_i w^\top x_i})$
+
+% \subsection*{Logistic regression}
+% Assume iid Bernoulli noise instead of Gauss.\\
+% $P(y|x,w) = Ber(y; \sigma(w^Tx)) = \frac{1}{1+exp(-y w^T x)}$\\
+% $l_{logistic}(w;x_i,y_i)=log(1+exp(-y_iw^Tx_i))$\\
+% $\nabla_wl(w)=\frac{(-y_ix_i)}{1+exp(+y_iw^Tx_i)}=P(Y=-y|x,w)(-y_ix_i)$
+% %$=\begin{cases}
+% %1/(1+exp(-w^Tx)) = \sigma(w^T x)\\
+% %		1 - 1/(1+exp(-w^Tx)) = \sigma (-w^T x)\\
+% %\end{cases}$
+% %Learning: $w = \underset{w}{\operatorname{argmax}} P(w|x,y)$\\
+% %Classification: Use $P(y|x,w) = \frac{1}{1+exp(-yw^Tx)}$ and predict most likely class label.
+
+% \subsection*{Example: MLE for logistic regression}
+% $\operatorname{argmax_w} P(y_{1:n}|w,x_{1:n})\\
+% = \operatorname{argmin_w} - \sum_{i=1}^n log P(y_i|w,x_i)\\
+% = \operatorname{argmin_w} \sum_{i=1}^n log(1+exp(-y_i w^T x_i))\\
+% \hat{R}(w) = \sum_{i=1}^n log(1+exp(-y_i w^T x_i))$ (neg log l. f.)
+% %negative log likelihood function
+
+% %\subsection*{Gradient for logistic regression}
+% %Loss function $l(w) = log(1+exp(-yw^Tx))$\\
+% %$\nabla_w l(w) = \frac{1}{1+exp(-yw^Tx)} exp(-yw^Tx) (-yx)$\\
+% %$=\frac{1}{1+exp(yw^Tx)} (-yx)$\\
+% %$=P(Y = -y|w, x) (-yx)$
+
+% \subsection*{Logistic regression and regularization}
+% $\underset{w}{\operatorname{min}} \sum_{i=1}^n log(1+exp(-y_i w^T x_i)) + 
+% \lambda (||w||_1 or ||w||_2^2)$
+
+% \subsection*{SGD for logistic regression}
+% \iffalse
+% 1. Initialize w\\
+% 2. For t=1,2,...\\
+% Pick data $(x,y) \in_{u.a.r} D$\\
+% Prob. of misclas. $\hat{P}(Y = -y|w,x) = \frac{1}{1+exp(yw^Tx)}$\\
+% \fi
+% Update $w \leftarrow w + \eta_t y x \hat{P}(Y = -y|w,x)$\\
+% \textbf{L2 regularized logistic regression:}\\
+% Update $w \leftarrow w (1-2\lambda \eta_t) + \eta_t y x \hat{P}(Y = -y|w,x)$
+
+% \subsection*{Multiclass Logistic Regression}
+% $P(Y=i|x,w_1,..,w_c)=exp(w_i^Tx)/\Sigma_j^c exp(w_j^Tx)$

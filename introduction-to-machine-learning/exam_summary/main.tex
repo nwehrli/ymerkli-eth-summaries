@@ -15,6 +15,10 @@
 \usepackage{mathtools}
 \usepackage{ccicons}
 \usepackage{hyperref}
+\usepackage[inline]{enumitem}
+% \PassOptionsToPackage{dvipsnames}{xcolor}
+\usepackage{xcolor}
+% \usepackage[dvipsnames]{xcolor}
 
 \let\bar\overline
 \def\D{\mathcal{D}}
@@ -44,6 +48,20 @@ Cheat sheet\\
 Nicolas Wehrli,~page~\thepage~of~2
 \end{mdframed}
 }
+
+\newcommand{\middot}{~\textperiodcentered~}
+\newlist{rowlist}{enumerate*}{1}
+\setlist[rowlist]{label={\textbf{\roman*}\text{: }}, afterlabel={}, itemjoin=\middot}
+
+\newcommand{\E}[0]{\mathbb{E}}
+\newcommand{\N}[0]{\mathbb{N}}
+\newcommand{\R}[0]{\mathbb{R}}
+
+\newcommand{\sgn}[0]{\text{sgn}}
+
+\newcommand{\argmin}[1]{\underset{#1}{\text{argmin}}}
+\newcommand{\argmax}[1]{\underset{#1}{\text{argmax}}}
+
 
 \makeatletter
 \renewcommand{\section}{\@startsection{section}{1}{0mm}%
@@ -86,19 +104,19 @@ For the full \LaTeX \ source code, consider \texttt{\href{https://github.com/nwe
 \newpage
 	
 %\input{Probabilities}
-\input{Important}
-\input{Regression}
-\input{Classification}
-\input{Kernels}
-\input{Imbalance}
-\input{Multi-class}
-\input{NeuralNetworks}
-\input{Clustering}
-\input{DimensionReduction}
-\input{ProbabilityModeling}
-\input{DecisionTheory}
-\input{Generative}
-\input{Latent}
+\input{chapters/01_Important.tex}
+\input{chapters/02_Regression.tex}
+\input{chapters/03_Classification}
+\input{chapters/04_Kernels}
+% \input{chapters/05_Multi-class}
+\input{chapters/06_NeuralNetworks}
+\input{chapters/07_Clustering}
+\input{chapters/08_DimensionReduction}
+\input{chapters/09_ProbabilityModeling}
+\input{chapters/10_DecisionTheory}
+\input{chapters/11_Generative}
+\input{chapters/12_GMM}
+\input{chapters/13_LLM}
 
 \end{multicols*}
 \end{document}

@@ -1,0 +1,79 @@
+\section*{Classification}
+$\hat{y}=sign(f(x))=sign(w^Tx), z = yf(x)$
+Surrogate Losses for 0-1: \(\ell_{\text{exp}(z)} = e^{-z}, \ell_{\text{log}}(z) = \log(1+e^{-z})\)
+
+\(\nabla_z \ell_{\text{exp}}\) explodes for \(z \to -\infty\), sens. to outliers.
+\textbf{Logistic Reg.} \(L(w) = \frac{1}{n}\sum_{i = 1}^n \log(1+e^{-y_iw^Tx_i})\)
+(linear boundary!)
+
+
+% Perceptron\\
+% $l_{P} (w;y_i,x_i) = max\{0, -y_i w^T x_i \}$\\
+% $w^* = \operatorname{argmin_w} \sum_{i=1}^n l_p (w;y_i,x_i)$\\
+% $\nabla_w l_p(w;y_i,x_i) = (-y_ix_i)1[y_iw^Tx_i<0]$
+
+% \subsection*{Stochastic Gradient Descent (SGD)}
+% 1. Start at an arbitrary $w_0 \in \mathbb{R}^d$\\
+% 2. For $t = 1, 2,  ...$ do: \\
+% 	Pick data point $(x',y') \in_{u.a.r.} D$\\
+% 	$w_{t+1} = w_t - \eta_t \nabla_w l(w_t;x',y')$\\
+% Perceptron Alg: SGD with Perceptron loss
+
+%\subsection*{Perceptron Algorithm}
+%Stoch. Gradient Descent with Perceptron loss\\
+%\emph{Theorem:} If $D$ is linearly separable $\Rightarrow$ Perceptron will obtain a linear separator.
+
+%\subsection*{Hinge loss}
+%Loss for Support Vector Machine.\\
+%$l_H(w;x,y) = max \{0,1-y w^T x\}$
+
+\subsection*{MM and SVM}
+\(w_{\text{MM}} = {\arg \max}_{||w||_2=1}\min_{1\leq i \leq n} y_i \langle w, x_i \rangle\)\\
+\(w_{\text{SVM}} = \arg \min||w||_2 \text{ s.t. } y_i\langle w, x_i \rangle \geq 1, \forall i\)
+
+If data \textbf{linearly sep.}, 1. \(w_{\text{SVM}} = w_{\text{MM}}||w_{\text{SVM}}||_2\)
+
+2. GD on logistic reg. (\(\eta = 1\)): \(\frac{w^t}{||w^t||_2} \to w_{\text{MM}}\) 
+
+If \textbf{not} and \(ker(X) = \emptyset\), GD on logistic reg. (\(\eta = \frac{4}{\lambda_{max}(X)}\))
+\(w^t \to \hat{w}\), \(\hat{w}\) global min.
+
+\textbf{Hinge loss}: $l_H(w;x,y) = max \{0,1-y w^T x\}$\\
+\textbf{soft-mar.}
+$w^* = \underset{w}{\operatorname{argmin}} ||w||_2^2 + \lambda\sum_{i=1}^nl_H(w;x_i,y_i)\\
+g_i(w) = max \{0,1-y_i w^T x_i\} + \lambda ||w||_2^2\\
+\nabla_w g_i(w) = \begin{cases}
+    -y_i x_i + 2\lambda w &\text{ , if $y_i w^T x_i<1$}\\
+		2\lambda w &\text{ , if $y_i w^T x_i \geq 1$}
+\end{cases}$
+
+%\subsection*{L1-SVM}
+%$\underset{w}{\operatorname{min}} \lambda ||w||_1 + \sum_{i=1}^n max(0,1-y_i w^T x_i)$
+
+%\subsection*{Matrix-Vector Gradient}
+%multiply transposed matrix to the same side as its occurance w.r.t. derivate variable: $\beta \in \mathbb{R}^d$
+%$\nabla_\beta ( ||y-X\beta||_2^2 + \lambda ||\beta||_2^2 ) = 2X^T (y-X\beta) + 2\lambda \beta$\\
+
+\subsection*{Multi-Class Classification}
+\(\hat{y}(x)=\operatorname{argmax_{k \in \{1,.,K\}}}f_k(x)\); \(f = (f_1, ..., f_K)\)\\
+\textbf{OvR}: For each class \(k \in [K]\):
+
+1. Relabel \(\tilde{y}_i = 1\) if \(y_i = k\), else \(\tilde{y}_i = -1\) as \(\D_k\)
+
+2. Train \(f_k\) as binary classifier on \(\D_k\) 
+
+\textbf{Cross-E. Loss}: \(\ell_{\text{ce}}(f(x), y) = -\log\left(\frac{e^{f_y(x)}}{\sum_{k=1}^Ke^{f_k(x)}}\right)\)
+
+\textbf{OvO}: \(L(w) = \sum_{i = 1}^n\ell_{\text{ce}}(f_w(x_i), y_i)\); GD on \(L(w)\)
+
+Multiplicative noise model: \(y = y^*(x)\varepsilon\)
+\subsection*{Cost Sensitive Classification}
+Replace loss by: $l_{CS}(w;x,y) = c_y l(w;x,y)$
+
+\subsection*{Metrics (convention: positive = rare)}
+Accuracy=$\frac{\text{\#correct predictions}}{\#all\, predictions}$=$\frac{TP+TN}{TP+TN+FP+FN}$, 
+Precision=$\frac{\#correct'+'predictions}{\#all'+'predictions}$=$\frac{TP}{TP+FP}=$1-FDR\\
+Rec.=TPR=$\frac{TP}{TP+FN}=\frac{TP}{n_+}$, FPR=$\frac{FP}{TN+FP}=\frac{FP}{n_-}$=T1\\
+F1 score $=\frac{2TP}{2TP+FP+FN}=\frac{2}{\frac{1}{Precision}+\frac{1}{Recall}}$
+
+\(\hat{y_\tau}(x) = \text{sign}(\hat{f}(x) - \tau)\) (varying threshold)

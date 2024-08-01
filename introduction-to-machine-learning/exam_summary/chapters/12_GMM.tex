@@ -1,4 +1,4 @@
-\section*{Latent: Missing Data \red{(Gaussian distr.)}}
+\section*{Gaussian Mixture Model}
 \subsection*{Mixture modeling $\color{red} P(x|\theta)=P(x|\mu;\Sigma,w)$}
 1)Model each cluster j as prob. distr. $P(x|\theta_j)$\\
 %Assuming data iid, likelihood is
@@ -23,6 +23,7 @@ Predict class $z_i$ for each $x_i$:\\
 $\color{red} =\operatorname{argmax_z} w_z^{(t-1)}\mathcal{N}(x_i|\mu_z^{(t-1)},\Sigma_z^{(t-1)})$\\
 \textbf{M: }Compute the MLE as for the Gaussian B. class.:
 $\theta^{(t)} = \operatorname{argmax_\theta} P(D^{(t)}|\theta)$\\
+\(\forall i. (x_i, z_i^{(t)}) \in D^{(t)}\); works poorly if clust. overlap
 Special case: fix $w_z=\frac{1}{k}, \text{spher. cov. } \Sigma_z=\sigma^2\mathbb{I}$\\
 $\rightarrow \text{k-means:}$ \textbf{E: } $z_i^{(t)}=\operatorname{argmin_z}||x_i-\mu_z^{(t-1)}||_2^2$\\
 \textbf{M: }$\mu_j^{(t)}=\frac{1}{n_j}\Sigma _{i:z_i^{(t)}=j} x_i$
@@ -93,5 +94,3 @@ $\sum_{i=1}^n \sum_{j=1}^k \gamma_j^t(x_i) \log (P(x_i|z_i=j;\theta) P(z_i=j;\th
 $\theta_{t+1} = \underset{\theta}{\operatorname{argmax}} \mathbb{E}_{\gamma^t}[\log P(\mathcal{D;\theta})]$
 \fi
 
-\textbf{Additions:} small variance \& high bias $\rightarrow$ too simple model\\
-CNN filter output size: $L=\frac{n+2p-f}{s}+1$

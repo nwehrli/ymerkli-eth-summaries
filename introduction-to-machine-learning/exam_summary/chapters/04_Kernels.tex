@@ -1,0 +1,32 @@
+\section*{Kernels $k: \mathcal{X} \times \mathcal{X} \rightarrow \mathbb{R}$}
+
+Reparam. \(w = \phi^T\alpha\); \(f(x) = \sum_{i=1}^n\alpha_i\langle\phi(x_i), \phi(x)\rangle\)
+
+A kernel is \textbf{valid} if $K$ is sym.: $k(x,z) = k(z,x)$ and psd: $z^\top K z \geq 0$
+
+\textbf{mono.}: $k(x,y) = (x^\top y)^m$,
+\textbf{poly}: $k(x,y) = (1+x^\top y)^m$,
+\textbf{RBF}: $k(x, z) = \exp ( -\frac{||x - z||_\alpha}{\tau} )$, $\alpha = 1 \Rightarrow $ Laplacian, $\alpha = 2 \Rightarrow $ Gaussian
+
+\textbf{Mercers Theorem}: Valid kernels can be decomposed into a lin. comb. of inner products.
+
+\textbf{Kernel composition}
+$k = k_1 + k_2$, 
+$k = k_1 \cdot k_2$,
+$\forall c > 0. \; k = c \cdot k_1$,
+$k = f(k_1)$, $f$ pwr. series w/ non-neg. coeffs.,
+$k(\binom{x}{y}, \binom{x'}{y'})=k(x,x')k(y,y')$, $k(\binom{x}{y}, \binom{x'}{y'})=k(x,x') + k(y,y')$,
+$k(x, x') = g(\left< x, x' \right>)$, $g$ all Taylor coefficients non-negative,
+$\forall f. \; k(x,y) = f(x)k_1(x,y)f(y)$
+
+\textbf{Kern. Ridge Reg.}
+$\min_w \frac1n \|y - \Phi w\|^2 + \lambda ||w||_2^2 = \min_\alpha \frac1n ||y - K\alpha||_2^2 + \lambda \alpha^\top K \alpha$
+
+
+\subsection*{k Nearest Neighbor classifier}
+% $y=sign(\sum_{i=1}^n y_i [x_i \text{ among k nn of } x])$
+\begin{rowlist}
+	\item Pick $k$ and distance metric $d$
+	\item For given $x$, find among $x_1,...,x_n \in D$ the $k$ closest to $x \to x_{i_1},..., x_{i_k}$
+	\item Output the majority vote of labels
+\end{rowlist}
