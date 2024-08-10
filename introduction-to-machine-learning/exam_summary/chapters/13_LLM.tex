@@ -16,3 +16,43 @@ i.e. $Z = \text{softmax}(\frac{Q \times K\top}{\sqrt{d_k}}) V$
 \textbf{Positional Encodings:} Add to word embeddings, e.g. sine functions w/ different freq.
 
 \textbf{Enc.-Dec. Att.:} dec.: $Q$ so far. enc.: $K, V$
+
+\textbf{Task}
+First, plug in the complete data log-likelihood into the equation for $Q$:
+
+\(Q(\lambda ; \lambda^{j}) := \mathbb{E}_{z_{1:m}}[(n+m)\log(\lambda) - \lambda \sum_{i=1}^mt_i - \lambda \sum_{i=1}^mz_i \ \ | t_{1:n} ; \lambda^{(j)}]\)
+
+The 1. and 2. summand don't depend on $z_{1:m}$ nor $t_{1:n}$ nor $\lambda^{(j)}$:
+
+\(= (n+m)\log(\lambda)+ \lambda \sum_{i=1}^m t_i+\mathbb{E}_{z_{1:m}}[\lambda\sum_{i=1}^mz_i | t_{1:n} ; \lambda^{(j)}]\)
+
+
+
+The third summand does not depend on $t_{1:n}$ but\(z_i \sim \)Exp($\lambda^{(j)}$). 
+\(\mathbb{E}_{z_{1:m}}[\lambda\sum_{i=1}^mz_i | t_{1:n} ; \lambda^{(j)}] = \lambda\sum_{i=1}^m \mathbb{E}_{z_{1:m}}[z_i | \lambda^{(j)}]\)
+
+We know that $z_i \geq \tau$. We use a new Exp($\lambda^{(j)}$) distributed variable $z_i'$ to model this:
+
+\(\mathbb{E}_{z_{1:m}}[z_i | \lambda^{(j)}] = \mathbb{E}[z_i' | z_i' \geq \tau ; \lambda^{(j)}]\)
+
+\(= \frac{1}{\mathbb{P}[z_i' \geq \tau]} \int_{\tau}^{\inf} z_i' \lambda^{(j)} e^{-\lambda^{(j)}z_i'} dz_i'\) (below $\tau$ the value is $0$)
+
+\(= \frac{1}{\mathbb{P}[z_i' \geq \tau]} (\tau\lambda^{(j)}+1)e^{-\tau\lambda^{(j)}}\frac{1}{\lambda^{(j)}}\) (hint)
+
+Furthermore:
+
+\(\mathbb{P}[z_i' \geq \tau]= \int_{\tau}^{\inf} \lambda^{(j)} e^{-\lambda^{(j)}z_i'}dz_i' = e^{-\lambda^{(j)}\tau}\)
+
+Thus we get:
+
+\(\frac{1}{e^{-\lambda^{(j)}\tau}} (\tau\lambda^{(j)}+1)e^{-\tau\lambda^{(j)}}\frac{1}{\lambda^{(j)}}= (\tau\lambda^{(j)}+1)\frac{1}{\lambda^{(j)}}\)
+
+Assembling this back together, we get for the third summand:
+
+\(\lambda\sum_{i=1}^m \mathbb{E}_{z_{1:m}}[z_i | \lambda^{(j)}] = \lambda^{(j)}\sum_{i=1}^m ((\tau\lambda^{(j)}+1)\frac{1}{\lambda^{(j)}}) = \lambda^{(j)} m (\tau\lambda^{(j)}+1)\frac{1}{\lambda^{(j)}} = m (\tau\lambda^{(j)}+1) = m\lambda^{(j)} (\tau + \frac{1}{\lambda^{(j)}})\)
+
+Finally, summing the three summands again:
+
+\(= \mathbb{E}_{z_{1:m}}[(n+m)\log(\lambda) | t_{1:n} ; \lambda^{(j)}] - \mathbb{E}_{z_{1:m}}[\lambda \sum_{i=1}^mt_i | t_{1:n} ; \lambda^{(j)}] - \mathbb{E}_{z_{1:m}}[\lambda\sum_{i=1}^mz_i | t_{1:n} ; \lambda^{(j)}]\)
+
+\(= (n+m)\log(\lambda) - \lambda \sum_{i=1}^m t_i - m\lambda^{(j)} (\tau + \frac{1}{\lambda^{(j)}})\)

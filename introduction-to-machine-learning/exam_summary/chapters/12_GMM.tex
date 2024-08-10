@@ -38,14 +38,14 @@ $\color{red} =\frac{w_j P(x|\Sigma_j,\mu_j)}{\Sigma_l w_l P(x|\Sigma_l,\mu_l)}
 =\frac{w_j \mathcal{N}(x;\Sigma_j,\mu_j)}{\Sigma_l w_l \mathcal{N}(x;\Sigma_l,\mu_l)}$
 
 
-$Q(\theta;\theta^{(t-1)})=\mathbb{E}_{y_{1:n}}[\log P(x_{1:n},y_{1:n}|\theta)|x_{1:n},\theta^{(t-1)}]$ 
-$=\mathbb{E}_{y_{1:n}}[\log \Pi_{i=1}^nP(x_i,y_i|\theta)|x_{1:n},\theta^{(t-1)}]=$ \\
-$=\sum_{i=1}^n \mathbb{E}_{y_i}[\log P(x_{1:n},y_i;\theta)|x_i,\theta^{(t-1)}] = $ \\
-$\sum_{i=1}^n \sum_{j=1}^k P(y_i=j|x_i,\theta^{(t-1)})\log (P(x_i,y_i=j;\theta) )$ \\
-$=\sum_{i=1}^n \sum_{j=1}^k \gamma_{j}^t(x_i) \log (P(y_i=j)P(x_i|y_i=j;\theta) )$ \\
-If constraint $\Sigma_{j=1}^m P(y_i=j;\theta)=1$ (m: \#labels):
-$\rightarrow \mathcal{L}(\theta,\lambda)=Q(\theta;\theta^{(t-1)})+
-\lambda(\Sigma_j^mP(y_i=j)-1) $
+$Q(\theta;\theta^{(t-1)})=\mathbb{E}_{z_{1:n}}[\log P(x_{1:n},z_{1:n}|\theta)|x_{1:n},\theta^{(t-1)}]$ 
+$=\mathbb{E}_{z_{1:n}}[\log \Pi_{i=1}^nP(x_i,z_i|\theta)|x_{1:n},\theta^{(t-1)}]=$ \\
+$=\sum_{i=1}^n \mathbb{E}_{z_i}[\log P(x_{1:n},z_i;\theta)|x_i,\theta^{(t-1)}] = $ \\
+$\sum_{i=1}^n \sum_{j=1}^k P(z_i=j|x_i,\theta^{(t-1)})\log (P(x_i,z_i=j|\theta) )$ \\
+$=\sum_{i=1}^n \sum_{j=1}^k \gamma_{j}^t(x_i) \log (P(z_i=j)P(x_i|z_i=j, \theta) )$ \\
+If constraint $\Sigma_{j=1}^m P(z_i=j;\theta)=1$ (m: \#labels):
+$\rightarrow \mathcal{L}(\theta,\lambda)=Q(\theta|\theta^{(t-1)})+
+\lambda(\Sigma_j^mP(z_i=j)-1) $
 
 
 \textbf{M-step:} Fit clusters to weighted data points:
@@ -55,7 +55,7 @@ $\color{red} w_j^{(t)} \leftarrow \frac{1}{n} \sum_{i=1}^n \gamma_j^{(t)} (x_i)$
 $\color{red} \mu_j^{(t)} \leftarrow \frac{\sum_{i=1}^n \gamma_j^{(t)} (x_i) x_i}{\sum_{i=1}^n \gamma_j^{(t)} (x_i)}\\ %\text{|learning with GMMs } ^t = ^*\\
 \Sigma_j^{(t)} \leftarrow \frac{\sum_{i=1}^n \gamma_j^{(t)}(x_i) (x_i - \mu_j^{(t)}) (x_i - \mu_j^{(t)})^T}{\sum_{i=1}^n \gamma_j^{(t)}(x_i)} \{+\nu^2\mathbb{I}\}$\\ %\text{|}\gamma^{(t) = \gamma}$
 
-SSL w/ GMMs: labeled p.: $y_i$: $\gamma_j^{(t)}(x_i) = 1[j = y_i]$\\
+SSL w/ GMMs: labeled p.: $z_i$: $\gamma_j^{(t)}(x_i) = 1[j = z_i]$\\
 unl. p.: $\gamma_j^{(t)}(x_i) = P(Z=j|x_i, \mu^{(t-1)}, \Sigma^{(t-1)}, w^{(t-1)})$
 %unlabeled points
 %unl. p.: $\gamma_j^{(t)}(x_i) = P(Z=j|x_i, \mu^{(t-1)}, \Sigma^{(t-1)}, w^{(t-1)})$

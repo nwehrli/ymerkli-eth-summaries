@@ -56,10 +56,29 @@ $\frac{\partial}{\partial x}b^Tx=\frac{\partial}{\partial x}x^Tb=b^T,\!
 $\frac{\partial}{\partial x}(b^TAx)=A^Tb, \nabla_X(c^TXb)=cb^T,
 \nabla_X(c^TX^Tb)=bc^T; ||A||_{op} = sup_{||x||_2=1}||Ax||_2$
 
-$\textbf{convex} \iff f(\lambda x+ (1-\lambda)y) \leq \lambda f(x) + (1-\lambda)f(y); 
-f(y) \geq f(x) + \langle\nabla f(x), y-x\rangle; D^2f(x) \geq 0$\\
-\(\alpha f + \beta g \textbf{ c.}; \max(f, g) \textbf{ c.} \text{ if } f, g \textbf{ c.}, \alpha, \beta \geq 0\)\\
-\(f \circ g = f(g(x)) \textbf{ c.} \text{ if } f \textbf{ c.}, g \textbf{ a.} \lor f \textbf{c., non-dec.}, g \textbf{ c.}\)
+
+\textbf{\textcolor{red}{(Strong)} Convexity:}
+
+0: $f(\lambda x + (1 - \lambda)y) \leq \lambda f(x) + (1- \lambda) f(y) \textcolor{red}{-\frac{m}{2} \lambda (1-\lambda) ||x-y||_2^2}$
+
+1: $f(y) \geq f(x) + \nabla f(x)^\top (y - x) \textcolor{red}{-\frac{m}{2} ||x-y||_2^2}$
+
+2: Hessian $\nabla^2 f (x) \succcurlyeq 0 \textcolor{red}{+ m I}$ (psd)
+
+\begin{rowlist}
+	\item $\alpha f + \beta g$, $\alpha, \beta \geq 0$, convex if $f, g$ convex
+	\item $f \circ g$, convex if $f$ convex and $g$ affine or $f$ convex non-decreasing and $g$ convex
+	\item $\max(f, g)$, convex if $f,g$ convex
+\end{rowlist}
+
+\textbf{PSD:}
+$M \in \mathbb{R}^{n\times n}$ PSD $\Leftrightarrow \forall x \in \mathbb{R}^n: x^\top Mx \geq 0 \\
+\Leftrightarrow$ all principal minors of $M$ have non-negative determinant $\Leftrightarrow \lambda \geq 0 \ \forall \lambda\in\sigma(M)$
+
+% $\textbf{convex} \iff f(\lambda x+ (1-\lambda)y) \leq \lambda f(x) + (1-\lambda)f(y); 
+% f(y) \geq f(x) + \langle\nabla f(x), y-x\rangle; D^2f(x) \geq 0$\\
+% \(\alpha f + \beta g \textbf{ c.}; \max(f, g) \textbf{ c.} \text{ if } f, g \textbf{ c.}, \alpha, \beta \geq 0\)\\
+% \(f \circ g = f(g(x)) \textbf{ c.} \text{ if } f \textbf{ c.}, g \textbf{ a.} \lor f \textbf{c., non-dec.}, g \textbf{ c.}\)
 % \textbf{Eigdec:}
 % $A,Q \in \mathbb{R}^{n\times n}, A=Q\Lambda Q^{-1},\! \Lambda = diag(\lambda_i)$\\
 % $Q=[v_1,..,v_n], \text{(col's are e-vec.)}$\\
@@ -71,8 +90,11 @@ f(y) \geq f(x) + \langle\nabla f(x), y-x\rangle; D^2f(x) \geq 0$\\
 % $X^TX=VS^TU^TUSV^T=VS^TSV^T=V\Sigma V^T$\\
 % $\Sigma = diag(\sigma_1^2,..,\sigma_n^2);\sigma_i^2=\lambda_i; \forall \lambda_i \geq 0$
 \(p_{\mu, \Sigma}(x)=\frac{1}{\sqrt{(2\pi)^p det(\Sigma)}}\exp(-\frac{1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu))\)\\
-\(\mathbf{X} \sim \mathcal{N}(\mu, \Sigma) \implies A\mathbf{X} + b \sim \mathcal{N}(A\mu+b, A\Sigma A^T)\)
-
+\(\mathbf{X} \sim \mathcal{N}(\mu, \Sigma) \implies A\mathbf{X} + b \sim \mathcal{N}(A\mu+b, A\Sigma A^T)\)\\
+$\mathbb{E}[X] = \mathbb{E}[\mathbb{E}[X \; | \; Y]] = \sum_{y} \mathbb{E}[X \; | \; Y] \mathbb{P}[Y = y]$
+$\text{If } X \geq 0: \; \mathbb{E}[X] = \int_{0}^{\infty} (1 - F(x))dx$\\
+ $\text{Var}(AX) = A \text{Var}(X) A^\top$
+ 
 % \textbf{Gauss CDF:}\\
 % $\Phi(u;v,w) = \int_{-\infty}^{u} \mathcal{N}(y;v,w)dy=\Phi(\frac{u-v}{\sqrt{w}};0,1)$;\\ %CDF: cumulative distribution function; PDF: standard normal probability density function, $\mu = 0$, $\sigma = 1$
 %PDF: $\phi(x) = \frac{1}{\sqrt{2\pi}} e^{-(1/2)x^2}$; $\int \phi(x) \partial x = \Phi(x) + c$;\\
